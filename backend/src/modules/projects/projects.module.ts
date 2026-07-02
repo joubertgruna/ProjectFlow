@@ -1,7 +1,8 @@
 import { Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { OpenAiClient } from '../../ai/clients/open-ai.client';
 import { MockAiClient } from '../../ai/clients/mock-ai.client';
+import { OllamaAiClient } from '../../ai/clients/ollama-ai.client';
+import { OpenAiClient } from '../../ai/clients/open-ai.client';
 import { IA_CLIENT } from '../../ai/interfaces/ia-client.interface';
 import { ProjectAnalysisPromptBuilder } from '../../ai/prompt-builders/project-analysis-prompt.builder';
 import { AiAnalysisService } from '../../ai/services/ai-analysis.service';
@@ -24,13 +25,23 @@ import { RiskCalculatorService } from './services/risk-calculator.service';
     AiAnalysisService,
     ProjectAnalysisPromptBuilder,
     MockAiClient,
+    OllamaAiClient,
     OpenAiClient,
     EndDateAfterStartDateConstraint,
     {
       provide: IA_CLIENT,
-      inject: [ConfigService, MockAiClient, OpenAiClient],
-      useFactory: (config: ConfigService, mock: MockAiClient, openai: OpenAiClient) =>
-        config.get('AI_PROVIDER') === 'openai' ? openai : mock,
+      inject: [ConfigService, MockAiClient, OpenAiClient, OllamaAiClient],
+      useFactory: (
+        config: ConfigService,
+        mock: MockAiClient,
+        openai: OpenAiClient,
+        ollama: OllamaAiClient,
+      ) => {
+        const provider = config.get('AI_PROVIDER');
+        if (provider === 'openai') return openai;
+        if (provider === 'ollama') return ollama;
+        return mock;
+      },
     },
   ],
 })

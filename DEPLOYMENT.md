@@ -52,6 +52,8 @@ FRONTEND_PORT=127.0.0.1:8080
 
 AI_PROVIDER=mock
 OPENAI_API_KEY=
+OLLAMA_BASE_URL=http://ollama:11434
+OLLAMA_MODEL=qwen2.5:0.5b
 ```
 
 Se usar OpenAI real:
@@ -60,6 +62,42 @@ Se usar OpenAI real:
 AI_PROVIDER=openai
 OPENAI_API_KEY=sk-...
 ```
+
+Se usar Ollama local:
+
+```env
+AI_PROVIDER=ollama
+OLLAMA_BASE_URL=http://ollama:11434
+OLLAMA_MODEL=qwen2.5:0.5b
+```
+
+Suba o serviço opcional e baixe o modelo:
+
+```bash
+docker compose \
+  --env-file .env.production \
+  -f docker-compose.prod.yml \
+  -f docker-compose.ollama.yml \
+  up -d ollama
+
+docker compose \
+  --env-file .env.production \
+  -f docker-compose.prod.yml \
+  -f docker-compose.ollama.yml \
+  exec ollama ollama pull "$OLLAMA_MODEL"
+```
+
+Depois recrie o backend com o mesmo conjunto de arquivos Compose:
+
+```bash
+docker compose \
+  --env-file .env.production \
+  -f docker-compose.prod.yml \
+  -f docker-compose.ollama.yml \
+  up -d --no-deps backend
+```
+
+Para a VPS atual deste projeto, mantenha `AI_PROVIDER=mock` ou use OpenAI externa. Ollama na mesma máquina exige mais folga de RAM e disco do que a instância atual oferece.
 
 ## 4. Subir produção
 
@@ -142,6 +180,7 @@ Depois configure HTTPS com Certbot ou use Caddy para automatizar certificados.
 - `POSTGRES_PASSWORD` forte e privado.
 - `FRONTEND_URL` igual à URL pública do frontend.
 - `VITE_API_URL` igual à URL pública da API, por exemplo `https://projectflow.lidedesk.com.br/api`.
-- `AI_PROVIDER=mock` se não for usar OpenAI.
+- `AI_PROVIDER=mock` se não for usar OpenAI nem Ollama.
+- `OLLAMA_MODEL` baixado antes de usar `AI_PROVIDER=ollama`.
 - Migrations versionadas em `backend/prisma/migrations`.
 - `docker compose --env-file .env.production -f docker-compose.prod.yml config` sem erros.
