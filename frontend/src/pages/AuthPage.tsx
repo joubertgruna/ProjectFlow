@@ -1,4 +1,4 @@
-import { ArrowRight, Mail, ShieldCheck, UserPlus } from 'lucide-react';
+import { ArrowRight, CheckCircle2, Mail, ShieldCheck, UserPlus } from 'lucide-react';
 import { FormEvent, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '../components/Button';
@@ -80,15 +80,22 @@ export function AuthPage({ mode }: { mode: 'login' | 'register' }) {
         </p>
       </section>
       <aside className="auth-aside">
-        <ShieldCheck size={28} />
-        <h2>Autenticação segura com sessão JWT</h2>
-        <p>
-          Login e registro já comunicam com a API, armazenam o token de acesso e
-          protegem o painel de projetos.
-        </p>
-        <Link to="/dashboard">
-          Ver dashboard <ArrowRight size={16} />
-        </Link>
+        <div className="auth-aside-content">
+          <span className="auth-aside-icon"><ShieldCheck size={28} /></span>
+          <h2>Autenticação segura com sessão JWT</h2>
+          <p>
+            Login e registro comunicam com a API, armazenam o token de acesso e
+            protegem o painel de projetos.
+          </p>
+          <div className="auth-proof-grid">
+            <span><CheckCircle2 size={16} /> Token persistido</span>
+            <span><CheckCircle2 size={16} /> Rotas protegidas</span>
+            <span><CheckCircle2 size={16} /> Sessão recuperada</span>
+          </div>
+          <Link to="/dashboard">
+            Ver dashboard <ArrowRight size={16} />
+          </Link>
+        </div>
       </aside>
     </main>
   );

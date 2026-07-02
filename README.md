@@ -25,6 +25,7 @@ flowchart LR
   AI --> Client[IAClient]
   Client --> Mock[MockAiClient]
   Client --> OpenAI[OpenAiClient]
+  Client --> Ollama[OllamaAiClient]
 ```
 
 ## Como rodar com Docker
@@ -71,8 +72,10 @@ Backend:
 
 - `DATABASE_URL`: conexão PostgreSQL.
 - `PORT`: porta da API.
-- `AI_PROVIDER`: `mock` ou `openai`.
+- `AI_PROVIDER`: `mock`, `openai` ou `ollama`.
 - `OPENAI_API_KEY`: chave para integração real com OpenAI.
+- `OLLAMA_BASE_URL`: URL do servidor Ollama quando `AI_PROVIDER=ollama`.
+- `OLLAMA_MODEL`: modelo usado no Ollama, por exemplo `qwen2.5:0.5b`.
 - `FRONTEND_URL`: origem liberada no CORS.
 - `JWT_SECRET`: segredo usado para assinar tokens JWT.
 
@@ -111,8 +114,29 @@ Frontend:
 - Autenticação usa JWT e senha com hash `bcrypt`.
 - O repository concentra acesso ao Prisma.
 - Regras de risco e status ficam em serviços dedicados e testáveis.
-- A análise de IA depende de uma interface, permitindo trocar mock por OpenAI sem alterar controller ou regra de negócio.
+- A análise de IA depende de uma interface, permitindo trocar mock, OpenAI ou Ollama sem alterar controller ou regra de negócio.
 - O frontend centraliza chamadas HTTP em `project.service.ts` e usa hooks para cache e mutações.
+
+## IA com Ollama
+
+A aplicação suporta IA local com Ollama por meio de `AI_PROVIDER=ollama`. O backend chama a API `/api/generate` do Ollama, solicita JSON estruturado e usa a análise determinística como fallback caso o modelo esteja indisponível ou retorne conteúdo inválido.
+
+Exemplo local:
+
+```bash
+docker compose -f docker-compose.ollama.yml up -d
+docker exec -it projectanalsyscoder-ollama-1 ollama pull qwen2.5:0.5b
+```
+
+Depois configure o backend:
+
+```env
+AI_PROVIDER=ollama
+OLLAMA_BASE_URL=http://localhost:11434
+OLLAMA_MODEL=qwen2.5:0.5b
+```
+
+Em produção, use `docker-compose.ollama.yml` apenas em VPS com recursos suficientes. A instância atual usada neste deploy tem menos de 1 GB de RAM e pouco espaço livre, então o modo recomendado para demonstração estável nela permanece `AI_PROVIDER=mock` ou uma API externa.
 
 ## Melhorias futuras
 

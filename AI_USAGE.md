@@ -7,7 +7,7 @@ A IA foi utilizada como apoio de desenvolvimento para estruturar a arquitetura, 
 ## Onde a IA ajudou
 
 - Definição da separação entre controller, service, repository e serviços de domínio.
-- Organização da camada de IA com `IAClient`, `MockAiClient`, `OpenAiClient`, `AiAnalysisService` e `ProjectAnalysisPromptBuilder`.
+- Organização da camada de IA com `IAClient`, `MockAiClient`, `OpenAiClient`, `OllamaAiClient`, `AiAnalysisService` e `ProjectAnalysisPromptBuilder`.
 - Criação inicial dos DTOs, validações, testes unitários e documentação.
 - Revisão das regras de transição de status, exclusão e cálculo de risco.
 
@@ -16,7 +16,7 @@ A IA foi utilizada como apoio de desenvolvimento para estruturar a arquitetura, 
 - Criar uma aplicação full stack em React, NestJS, TypeScript, Prisma, PostgreSQL e Docker.
 - Implementar cadastro, consulta, edição, remoção e análise inteligente de projetos.
 - Separar regras de negócio do controller.
-- Preparar integração real futura com OpenAI com fallback para mock.
+- Preparar integração real com OpenAI ou Ollama com fallback para mock.
 - Documentar execução, arquitetura, variáveis de ambiente e decisões técnicas.
 
 ## O que foi aceito
@@ -45,6 +45,6 @@ A decisão de separar `RiskCalculatorService`, `ProjectStatusService`, `AiAnalys
 
 ## Limitações da entrega
 
-- A integração OpenAI está preparada, mas usa mock por padrão.
-- A autenticação não faz parte do escopo.
+- A integração OpenAI/Ollama está preparada, mas usa mock por padrão para manter a demo estável sem depender de chaves ou infraestrutura adicional.
+- A autenticação foi implementada com registro, login, rota `/auth/me`, JWT e proteção nos endpoints de projeto.
 - O seed é opcional e contém apenas um projeto inicial.
