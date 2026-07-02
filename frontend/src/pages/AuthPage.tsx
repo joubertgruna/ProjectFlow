@@ -1,4 +1,14 @@
-import { ArrowRight, CheckCircle2, Mail, ShieldCheck, UserPlus } from 'lucide-react';
+import {
+  ArrowRight,
+  BarChart3,
+  Brain,
+  CalendarCheck2,
+  CheckCircle2,
+  Gauge,
+  Mail,
+  ShieldCheck,
+  UserPlus,
+} from 'lucide-react';
 import { FormEvent, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '../components/Button';
@@ -81,16 +91,21 @@ export function AuthPage({ mode }: { mode: 'login' | 'register' }) {
       </section>
       <aside className="auth-aside">
         <div className="auth-aside-content">
-          <span className="auth-aside-icon"><ShieldCheck size={28} /></span>
-          <h2>Autenticação segura com sessão JWT</h2>
+          <span className="auth-aside-icon"><Gauge size={28} /></span>
+          <h2>ProjectFlow transforma projetos em decisões executivas.</h2>
           <p>
-            Login e registro comunicam com a API, armazenam o token de acesso e
-            protegem o painel de projetos.
+            Cadastre iniciativas, acompanhe orçamento e prazo, calcule risco automaticamente
+            e use IA para gerar recomendações claras para acompanhamento executivo.
           </p>
+          <div className="auth-feature-list">
+            <span><CalendarCheck2 size={17} /> Fluxo de status sem pular etapas</span>
+            <span><BarChart3 size={17} /> Indicadores de risco, orçamento e conclusão</span>
+            <span><Brain size={17} /> Análise inteligente com recomendação executiva</span>
+          </div>
           <div className="auth-proof-grid">
-            <span><CheckCircle2 size={16} /> Token persistido</span>
-            <span><CheckCircle2 size={16} /> Rotas protegidas</span>
-            <span><CheckCircle2 size={16} /> Sessão recuperada</span>
+            <span><CheckCircle2 size={16} /> Cadastro e edição</span>
+            <span><CheckCircle2 size={16} /> Risco automático</span>
+            <span><ShieldCheck size={16} /> Acesso protegido</span>
           </div>
           <Link to="/dashboard">
             Ver dashboard <ArrowRight size={16} />
