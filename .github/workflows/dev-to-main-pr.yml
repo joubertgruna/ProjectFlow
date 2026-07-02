@@ -1,0 +1,29 @@
+name: Open PR from dev to main
+
+on:
+  push:
+    branches:
+      - dev
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  open-pr:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Create pull request
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if gh pr list --base main --head dev --state open --json number --jq '.[0].number' | grep -q '[0-9]'; then
+            echo "PR from dev to main already exists."
+          else
+            gh pr create \
+              --base main \
+              --head dev \
+              --title "Promote dev to main" \
+              --body "Automated PR created from dev. Review and merge to trigger production deployment."
+          fi
